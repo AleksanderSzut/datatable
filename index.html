@@ -7,6 +7,9 @@
         <link rel="stylesheet" type="text/css" href="css/datatable.css">
     </head>
     <body>
+        <div class="searchDataTable">
+            <input type="search" id="search" placeholder="szukaj">
+        </div>
         <table class="datatable" id="app">
         </table>
     </body>
@@ -27,39 +30,46 @@
                 type: null
             },
             {
-                type: null,
-                specialClass: "status red",
+                type: "status",
+                specialClass: "status",
             },
             {
                 type: "date"
             },
             {
-                type: "button"
+                type: "button",
             }
         ],
+        specialAttr : {
+          "status" : "Opłacono"
+        },
         rows : [
                 [
                     1,
                     "Aleksander Szut",
                     "szut.aleksander@gmail.com",
-                    "1",
-                    "2020-05-18"
+                    0,
+                    "2020-05-18",
+                    "Zaloguj się"
                 ],
                 [
                     2,
                     "Jan Kowalski ",
                     "jan.kowalski@gmail.com",
-                    "0",
-                    "1020-05-18"
+                    1,
+                    "1020-05-18",
+                    "Zaloguj się"
                 ],
                 [
                     3,
                     "Adam Nowak",
                     "adam.nowak@gmail.com",
-                    "1",
-                    "2120-05-18"
+                    2,
+                    "2120-05-18",
+                    "Zaloguj się"
                 ]
             ]
         };
-    initDataTables(document.querySelector("#app"), myTable);
+    initDataTables(document.getElementById("app"), myTable);
+    initSearchDataTable(document.getElementById("search"));
 </script>

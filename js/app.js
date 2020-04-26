@@ -75,12 +75,42 @@ function setBodyRow() {
         let i=0;
         for(let data of row)
         {
-            let specialClass = '';
+            let specialClass = '', specialAttr = '';
             if(dataList.col[i].specialClass != null)
             {
+                let classes = dataList.col[i].specialClass.split(" ");
+                classes.forEach((item) => {
+                    if(typeof dataList.specialAttr[item] !== "undefined")
+                        specialAttr= `data-tableAttr="${dataList.specialAttr[item]}"`;
+                });
+
                 specialClass = dataList.col[i].specialClass;
             }
-            innerHTML += `<td class="${specialClass}">${data}</td>`;
+
+            switch (dataList.col[i].type) {
+                case "status":
+                    switch (data) {
+                        case 0:
+                            specialClass += " red";
+                            break;
+                        case 1:
+                            specialClass += " orange";
+                            break;
+                        case 2:
+                            specialClass += " green";
+                            break;
+                        default:
+                            specialClass += " red";
+                    }
+                    innerHTML += `<td class="${specialClass}" ${specialAttr}>${data}</td>`;
+                    break;
+                case "button":
+                    innerHTML += `<td class="${specialClass}" ${specialAttr}><a href="#wad">${data}</a> </td>`;
+                    break;
+                default:
+                    innerHTML += `<td class="${specialClass}" ${specialAttr}>${data}</td>`;
+            }
+
 
             i++
         }
@@ -120,10 +150,10 @@ function initDataTables(elementHandler, tableObject) {
             let specialType = '';
             if(tableObject.col[i].type != null)
             {
-                console.log(tableObject.col[i].type);
                 specialType = `, '`+tableObject.col[i].type+`'`;
             }
             tdElements += `<th id="tableColHeader${i}" class="" onclick="sortColumn(${i}${specialType})">${tdElement}</th>`;
+
 
             i++;
         }
@@ -141,4 +171,14 @@ function initDataTables(elementHandler, tableObject) {
     else
         console.error('Objekt danych nie posiada elementu "rows"');
 
+}
+
+function filterAll(e) {
+    console.log(e.target.value);
+
+}
+
+function initSearchDataTable(elementHandler) {
+
+    elementHandler.addEventListener("keyup", filterAll);
 }

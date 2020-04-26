@@ -28,6 +28,22 @@
   color: rgba(0, 0, 0, 0);
   position: relative;
 }
+.datatable__body .status:before {
+  content: attr(data-tableattr);
+  background-color: #333;
+  color: white;
+  opacity: 0;
+  padding: 7px 5px 5px 5px;
+  clip-path: polygon(0% 100%, 100% 100%, 100% 4px, 8px 4px, 5px 0, 2px 4px, 0% 4px);
+  position: absolute;
+  left: calc(50% - 5px);
+  top: calc(50% + 4px);
+  transition: opacity ease 0.3s;
+  z-index: 100;
+}
+.datatable__body .status:hover:before {
+  opacity: 1;
+}
 .datatable__body .status::after {
   content: "";
   display: block;
@@ -35,6 +51,7 @@
   left: 50%;
   top: 50%;
   height: 8px;
+  z-index: 1030;
   width: 8px;
   border-radius: 100%;
   transform: translate(-50%, -50%);
@@ -44,6 +61,9 @@
 }
 .datatable__body .status.green::after {
   background-color: green;
+}
+.datatable__body .status.orange::after {
+  background-color: orange;
 }
 
 /*# sourceMappingURL=datatable.css.map */
