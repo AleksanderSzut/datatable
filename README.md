@@ -77,7 +77,7 @@ let mojeDane = {
 ```
 - zainicializowanie wyszukiwarki
 ```js
-    initSearchDataTable(document.getElementById("Wyszukiwarka"));
+initSearchDataTable(document.getElementById("Wyszukiwarka"));
 ``` 
 #Przykład
    [live demo](https://github.com/AleksanderSzut/datatable.github.io)
