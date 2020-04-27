@@ -129,7 +129,7 @@ function setBodyRow(specialDataList)
                     innerHTML += `<td class="${specialClass}" ${specialAttr}>${data}</td>`;
                     break;
                 case "button":
-                    innerHTML += `<td class="${specialClass}" ${specialAttr}><a href="#wad">${data}</a> </td>`;
+                    innerHTML += `<td class="${specialClass}" ${specialAttr}><a href="${data.href}">${data.label}</a> </td>`;
                     break;
                 default:
                     innerHTML += `<td class="${specialClass}" ${specialAttr}>${data}</td>`;
@@ -223,5 +223,5 @@ function filterAll(e) {
 
 function initSearchDataTable(elementHandler) {
 
-    elementHandler.addEventListener("keyup", filterAll);
+    elementHandler.addEventListener("input", filterAll);
 }
