@@ -48,20 +48,20 @@ let mojeDane = {
     ]
 }
 ``` 
-- Zainicjalizowanie tabeli
-```js
+- Zainicjalizowanie tabeli 
+- ```js 
     initDataTables(document.getElementById("itTabeli"), mojeDane);
-```
+  ```
 #Dostępny typu kolumn
 - button 
     - wyświetlany jest w formie linku 
     - zezwalane wartości 
-    ```js
-    wartosc ={
-      label: "",
-      href: "adres dokąd prowadzi link",
-     }   
-  ``` 
+    - ```js
+        wartosc ={
+          label: "",
+          href: "adres dokąd prowadzi link",
+         }   
+        ``` 
 - status
     - zezwalane wartości
         - 0 - doda klasę red
