@@ -4,21 +4,22 @@
 let sortDirection = false;
 let tableHand;
 let dataList;
+let dataListCurrent;
+let toSortDataList = [];
 let tbody;
 
 function sortDateCol(sort, colID) {
-    dataList.rows = dataList.rows.sort((p1,p2) =>{
+    toSortDataList = toSortDataList.sort((p1,p2) =>{
         return sort ? new Date(p1[colID]) - new Date(p2[colID]) : new Date(p2[colID]) - new Date(p1[colID]);
     });
-    console.log("Date");
 }
 function sortNumberCol(sort, colID) {
-    dataList.rows = dataList.rows.sort((p1,p2) =>{
+    toSortDataList = toSortDataList.sort((p1,p2) =>{
         return sort ? p1[colID] - p2[colID] : p2[colID] - p1[colID]  ;
     });
 }
 function sortStringCol(sort, colID) {
-    dataList.rows = dataList.rows.sort((p1,p2) =>{
+    toSortDataList = toSortDataList.sort((p1,p2) =>{
         return sort ? p1[colID].localeCompare(p2[colID]) : p2[colID].localeCompare( p1[colID])  ;
     });
 }
@@ -26,7 +27,7 @@ function sortStringCol(sort, colID) {
 function sortColumn(colID, specialType)
 {
     sortDirection = !sortDirection;
-    const dataType = typeof dataList.rows[0][colID];
+    const dataType = typeof dataListCurrent.rows[0][colID];
 
     let sortedCol = document.querySelectorAll('.sortedColumn');
     for(let sortedItem of sortedCol)
@@ -37,6 +38,22 @@ function sortColumn(colID, specialType)
         thisCol.classList.add("sortDesc");
     else
         thisCol.classList.remove("sortDesc");
+    let i = 0;
+    let key = 0;
+    while(i < dataListCurrent.rows.length)
+    {
+        let value = dataListCurrent.rows[i];
+        if(value.length > 0)
+        {
+            toSortDataList[key]=value;
+            key++;
+            i++;
+        }
+        else
+        {
+            i = i+2;
+        }
+    }
 
     if(typeof specialType != 'undefined')
     {
@@ -49,7 +66,6 @@ function sortColumn(colID, specialType)
             default:
                 sortNumberCol(sortDirection, colID);
         }
-
     }
     else
     {
@@ -62,32 +78,40 @@ function sortColumn(colID, specialType)
                 break;
         }
     }
-
+    dataListCurrent.rows = toSortDataList;
     setBodyRow();
 }
 
-function setBodyRow() {
+function setBodyRow(specialDataList)
+{
     let innerHTML = '';
+    let datalist2;
+    if(typeof specialDataList !== 'undefined')
+        dataList2 = specialDataList;
+    else
+        dataList2 = dataListCurrent;
 
-    for(let row of dataList.rows)
+    console.debug(dataList2);
+
+    for(let row of dataList2.rows)
     {
         innerHTML += '<tr class="datatable datatable__row"> ';
         let i=0;
         for(let data of row)
         {
             let specialClass = '', specialAttr = '';
-            if(dataList.col[i].specialClass != null)
+            if(dataList2.col[i].specialClass != null)
             {
-                let classes = dataList.col[i].specialClass.split(" ");
+                let classes = dataList2.col[i].specialClass.split(" ");
                 classes.forEach((item) => {
-                    if(typeof dataList.specialAttr[item] !== "undefined")
-                        specialAttr= `data-tableAttr="${dataList.specialAttr[item]}"`;
+                    if(typeof dataList2.specialAttr[item] !== "undefined")
+                        specialAttr= `data-tableAttr="${dataList2.specialAttr[item]}"`;
                 });
 
-                specialClass = dataList.col[i].specialClass;
+                specialClass = dataList2.col[i].specialClass;
             }
 
-            switch (dataList.col[i].type) {
+            switch (dataList2.col[i].type) {
                 case "status":
                     switch (data) {
                         case 0:
@@ -132,7 +156,7 @@ function initDataTables(elementHandler, tableObject) {
 
     tableHand = elementHandler;
     dataList = tableObject;
-
+    dataListCurrent = JSON.parse(JSON.stringify(dataList));
 
     /*Load head*/
     if (typeof tableObject.head !== "undefined")
@@ -154,7 +178,6 @@ function initDataTables(elementHandler, tableObject) {
             }
             tdElements += `<th id="tableColHeader${i}" class="" onclick="sortColumn(${i}${specialType})">${tdElement}</th>`;
 
-
             i++;
         }
         elementHandler.appendChild(thead).innerHTML = `<tr>${tdElements}</tr>`;
@@ -174,7 +197,27 @@ function initDataTables(elementHandler, tableObject) {
 }
 
 function filterAll(e) {
-    console.log(e.target.value);
+
+    let searchText = e.target.value.toUpperCase();
+    let i = 0;
+    dataListCurrent = JSON.parse(JSON.stringify(dataList));
+
+    for(let row of dataListCurrent.rows)
+    {
+        let sum = false;
+        for(let column of row)
+        {
+            if (column.toString().toUpperCase().indexOf(searchText) > -1){
+                sum = true;
+            }
+        }
+        if(!sum){
+            dataListCurrent.rows[i] = [];
+        }
+
+        i++;
+    }
+    setBodyRow(dataListCurrent);
 
 }
 
