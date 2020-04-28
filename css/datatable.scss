@@ -2,101 +2,125 @@
 
 .datatable
 {
-  &__header
+  &__table
   {
-    background-color: #ddd;
-    th
+    &__header
     {
-      position: relative;
-      &::after, &::before
+      background-color: #ddd;
+      th
       {
-        content: '';
-        display: inline-block;
-        height: 10px;
-        width: 10px;
+        position: relative;
+        &::after, &::before
+        {
+          content: '';
+          display: inline-block;
+          height: 10px;
+          width: 10px;
+
+        }
+        &.sortedColumn
+        {
+          &::after
+          {
+            margin-left: 10px;
+          }
+          &::before
+          {
+            background-color: black;
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+
+            clip-path: polygon(0% 0%, 50% 100%, 100% 0%);
+
+          }
+
+          &.sortDesc::before
+          {
+             clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+          }
+        }
 
       }
-      &.sortedColumn
+    }
+    &__body
+    {
+      .status
       {
+        color: rgba(0, 0, 0, 0);
+        position: relative;
+        &:before
+        {
+          content: attr(data-tableattr);
+          background-color: #333;
+          color:white;
+          opacity: 0;
+          padding: 7px 5px 5px 5px;
+          clip-path: polygon(0% 100%, 100% 100%, 100% 4px, 8px 4px, 5px 0, 2px 4px, 0% 4px);
+          position: absolute;
+          left: calc(50% - 5px);
+          top: calc(50% + 4px);
+          transition: opacity ease .3s;
+          z-index:100;
+        }
+        &:hover:before
+        {
+          opacity: 1;
+        }
         &::after
         {
-          margin-left: 10px;
-        }
-        &::before
-        {
-          background-color: black;
+          content: '';
+          display: block;
           position: absolute;
-          right: 5px;
-          top: 50%;
-          transform: translateY(-50%);
-
-          clip-path: polygon(0% 0%, 50% 100%, 100% 0%);
+          left:50%;
+          top:50%;
+          height: 8px;
+          z-index:1030;
+          width: 8px;
+          border-radius: 100%;
+          transform: translate(-50%, -50%);
 
         }
-
-        &.sortDesc::before
+        &.red::after
         {
-           clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+          background-color: red;
+        }
+        &.green::after
+        {
+          background-color: green;
+        }
+        &.orange::after
+        {
+          background-color: orange;
         }
       }
+    }
+    &__row
+    {
 
     }
   }
-  &__body
+  &__pagination
   {
-    .status
+    display: flex;
+    &__item
     {
-      color: rgba(0, 0, 0, 0);
-      position: relative;
-      &:before
-      {
-        content: attr(data-tableattr);
-        background-color: #333;
-        color:white;
-        opacity: 0;
-        padding: 7px 5px 5px 5px;
-        clip-path: polygon(0% 100%, 100% 100%, 100% 4px, 8px 4px, 5px 0, 2px 4px, 0% 4px);
-        position: absolute;
-        left: calc(50% - 5px);
-        top: calc(50% + 4px);
-        transition: opacity ease .3s;
-        z-index:100;
-      }
-      &:hover:before
-      {
-        opacity: 1;
-      }
-      &::after
-      {
-        content: '';
-        display: block;
-        position: absolute;
-        left:50%;
-        top:50%;
-        height: 8px;
-        z-index:1030;
-        width: 8px;
-        border-radius: 100%;
-        transform: translate(-50%, -50%);
-
-      }
-      &.red::after
-      {
-        background-color: red;
-      }
-      &.green::after
-      {
-        background-color: green;
-      }
-      &.orange::after
+      background-color: #333333;
+      color:white;
+      margin: 2px;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      &.active
       {
         background-color: orange;
+        color:black;
       }
     }
-  }
-  &__row
-  {
-
   }
 
 }

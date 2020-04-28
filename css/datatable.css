@@ -1,19 +1,19 @@
-.datatable__header {
+.datatable__table__header {
   background-color: #ddd;
 }
-.datatable__header th {
+.datatable__table__header th {
   position: relative;
 }
-.datatable__header th::after, .datatable__header th::before {
+.datatable__table__header th::after, .datatable__table__header th::before {
   content: "";
   display: inline-block;
   height: 10px;
   width: 10px;
 }
-.datatable__header th.sortedColumn::after {
+.datatable__table__header th.sortedColumn::after {
   margin-left: 10px;
 }
-.datatable__header th.sortedColumn::before {
+.datatable__table__header th.sortedColumn::before {
   background-color: black;
   position: absolute;
   right: 5px;
@@ -21,14 +21,14 @@
   transform: translateY(-50%);
   clip-path: polygon(0% 0%, 50% 100%, 100% 0%);
 }
-.datatable__header th.sortedColumn.sortDesc::before {
+.datatable__table__header th.sortedColumn.sortDesc::before {
   clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
 }
-.datatable__body .status {
+.datatable__table__body .status {
   color: rgba(0, 0, 0, 0);
   position: relative;
 }
-.datatable__body .status:before {
+.datatable__table__body .status:before {
   content: attr(data-tableattr);
   background-color: #333;
   color: white;
@@ -41,10 +41,10 @@
   transition: opacity ease 0.3s;
   z-index: 100;
 }
-.datatable__body .status:hover:before {
+.datatable__table__body .status:hover:before {
   opacity: 1;
 }
-.datatable__body .status::after {
+.datatable__table__body .status::after {
   content: "";
   display: block;
   position: absolute;
@@ -56,14 +56,32 @@
   border-radius: 100%;
   transform: translate(-50%, -50%);
 }
-.datatable__body .status.red::after {
+.datatable__table__body .status.red::after {
   background-color: red;
 }
-.datatable__body .status.green::after {
+.datatable__table__body .status.green::after {
   background-color: green;
 }
-.datatable__body .status.orange::after {
+.datatable__table__body .status.orange::after {
   background-color: orange;
+}
+.datatable__pagination {
+  display: flex;
+}
+.datatable__pagination__item {
+  background-color: #333333;
+  color: white;
+  margin: 2px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.datatable__pagination__item.active {
+  background-color: orange;
+  color: black;
 }
 
 /*# sourceMappingURL=datatable.css.map */

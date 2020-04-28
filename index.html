@@ -6,16 +6,13 @@
         <link rel="stylesheet" type="text/css" href="css/datatable.css">
     </head>
     <body>
-        <div class="searchDataTable">
-            <input type="search" id="search" placeholder="szukaj">
-        </div>
+        <nav id="paginationNav" class="datatable datatable__pagination"></nav>
+
+        <input type="search" id="search" placeholder="szukaj">
+
         <input type="number" step="1" id="quantityOnPageInput">
-        <table class="datatable" id="app">
-        </table>
-        <div class="" id="pagination">
 
-
-        </div>
+        <table class="datatable datatable__table" id="app"></table>
     </body>
 </html>
 <script src="js/app.js"></script>
@@ -537,6 +534,7 @@
     initPagination(document.getElementById("pagination"), 5);
     initDataTables(document.getElementById("app"), myTable);
     initSearchDataTable(document.getElementById("search"));
+    setPaginationNav(document.getElementById("paginationNav"));
     initQuantityInput(document.getElementById("quantityOnPageInput"));
 
 </script>

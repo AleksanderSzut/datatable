@@ -2,17 +2,28 @@
 /*Własne funkcje porównywania znaków*/
 // mainFunc
 let sortDirection = false;
-let tableHand;
-let dataList;
+let tableHand;//Table handler
+let dataList; //orginal data list
 //sort
-let dataListCurrent;
-let toSortDataList = [];
-let tbody;
+let dataListCurrent; //data list current used
+let toSortDataList = []; //data list to filter *Delete empty rows*
+let tbody; //tbody element in table handler
 
 //pagination
+let paginationNav;//Pagination container
 let quantityOnPage = 20;
 let idPage = 1;
 
+//global function
+
+function lengthWithoutEmpty(arr) {
+    let i = 0;
+    arr.forEach((value)=>{
+        if(value.length > 0)
+            i++;
+    });
+    return i;
+}
 
 //sorting function
 function sortDateCol(sort, colID) {
@@ -47,11 +58,14 @@ function sortColumn(colID, specialType)
         thisCol.classList.add("sortDesc");
     else
         thisCol.classList.remove("sortDesc");
+
+
     let i = 0;
     let key = 0;
     while(i < dataListCurrent.rows.length)
     {
         let value = dataListCurrent.rows[i];
+
         if(value.length > 0)
         {
             toSortDataList[key]=value;
@@ -59,9 +73,7 @@ function sortColumn(colID, specialType)
             i++;
         }
         else
-        {
-            i = i+2;
-        }
+            i++;
     }
 
     if(typeof specialType != 'undefined')
@@ -100,7 +112,6 @@ function setBodyRow(specialDataList)
     else
         dataList2 = dataListCurrent;
 
-    console.debug(dataList2);
 
 
     let rowI = 1;
@@ -109,10 +120,10 @@ function setBodyRow(specialDataList)
         if(row.length > 0)
         {
             let pageNumber =  Math.ceil(rowI/ quantityOnPage);
-            console.log(idPage +"===" +pageNumber);
+
             if(idPage === pageNumber)
             {
-                innerHTML += '<tr class="datatable datatable__row"> ';
+                innerHTML += '<tr class="datatable__table datatable__table__row"> ';
                 let i = 0;
                 for(let data of row)
                 {
@@ -166,8 +177,8 @@ function setBodyRow(specialDataList)
 
 function loadTableBody() {
     tbody = document.createElement("tbody");
-    tbody.classList.add("datatable");
-    tbody.classList.add("datatable__body");
+    tbody.classList.add("datatable__table");
+    tbody.classList.add("datatable__table__body");
     tableHand.appendChild(tbody);
 
     setBodyRow();
@@ -177,15 +188,26 @@ function loadTableBody() {
 function filterAll(e) {
 
     let searchText = e.target.value.toUpperCase();
+
     let i = 0;
+
     dataListCurrent = JSON.parse(JSON.stringify(dataList));
+
+    let sortedColumn = document.querySelector(".sortedColumn");
+
+
+    if(sortedColumn != null){
+        sortedColumn.classList.remove("sortedColumn");
+        sortedColumn.classList.remove("sortDesc");
+    }
 
     for(let row of dataListCurrent.rows)
     {
         let sum = false;
         for(let column of row)
         {
-            if (column.toString().toUpperCase().indexOf(searchText) > -1){
+            if (column.toString().toUpperCase().indexOf(searchText) > -1)
+            {
                 sum = true;
             }
         }
@@ -195,8 +217,8 @@ function filterAll(e) {
 
         i++;
     }
+    setPaginationNav();
     setBodyRow(dataListCurrent);
-
 }
 
 function initPagination(elementHandler, quantityOnPageAttr) {
@@ -226,8 +248,8 @@ function initDataTables(elementHandler, tableObject) {
 
         let thead = document.createElement("thead");
         let tr = document.createElement("tr");
-        thead.classList.add("datatable");
-        thead.classList.add("datatable__header");
+        thead.classList.add("datatable__table");
+        thead.classList.add("datatable__table__header");
         thead.appendChild(tr);
 
         let tdElements = '';
@@ -259,7 +281,52 @@ function initDataTables(elementHandler, tableObject) {
 }
 
 function initQuantityInput(inputHandler) {
-
-
+    inputHandler.value = quantityOnPage;
+    inputHandler.addEventListener("change",  function (e) {
+        changeQuantity(e.target.value);
+    });
 
 }
+
+function setPaginationNav(navHandler) {
+    let numberPages =  Math.ceil(lengthWithoutEmpty(dataListCurrent.rows)/quantityOnPage);
+
+    if(typeof navHandler !== 'undefined')
+        paginationNav = navHandler;
+
+    let itemNav = document.createElement("div");
+    itemNav.classList.add("datatable__pagination");
+    itemNav.classList.add("datatable__pagination__item");
+    paginationNav.innerHTML = '';
+    for(let i=1; i <= numberPages; i++)
+    {
+        let el = itemNav.cloneNode(true);
+        el.innerText = `${i}`;
+        el.addEventListener("click", function (e) {
+
+            let active = document.querySelector(".datatable__pagination__item.active");
+            if(active != null)
+                active.classList.remove("active");
+
+            e.target.classList.add("active");
+
+            idPage = i;
+
+            setBodyRow();
+        });
+        paginationNav.appendChild(el);
+    }
+
+}
+
+//change function
+
+function changeQuantity(quantity) {
+    if(quantity < 1)
+        quantityOnPage = 1;
+    else
+        quantityOnPage = quantity;
+    setPaginationNav();
+    setBodyRow();
+}
+
