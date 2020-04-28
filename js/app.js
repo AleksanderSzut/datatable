@@ -1,29 +1,38 @@
 
 /*Własne funkcje porównywania znaków*/
-
+// mainFunc
 let sortDirection = false;
 let tableHand;
 let dataList;
+//sort
 let dataListCurrent;
 let toSortDataList = [];
 let tbody;
 
+//pagination
+let quantityOnPage = 20;
+let idPage = 1;
+
+
+//sorting function
 function sortDateCol(sort, colID) {
     toSortDataList = toSortDataList.sort((p1,p2) =>{
         return sort ? new Date(p1[colID]) - new Date(p2[colID]) : new Date(p2[colID]) - new Date(p1[colID]);
     });
 }
+
 function sortNumberCol(sort, colID) {
     toSortDataList = toSortDataList.sort((p1,p2) =>{
         return sort ? p1[colID] - p2[colID] : p2[colID] - p1[colID]  ;
     });
 }
+
 function sortStringCol(sort, colID) {
     toSortDataList = toSortDataList.sort((p1,p2) =>{
         return sort ? p1[colID].localeCompare(p2[colID]) : p2[colID].localeCompare( p1[colID])  ;
     });
 }
-/*Funkcja sortującja po kolumnie tabeli*/
+
 function sortColumn(colID, specialType)
 {
     sortDirection = !sortDirection;
@@ -93,52 +102,64 @@ function setBodyRow(specialDataList)
 
     console.debug(dataList2);
 
+
+    let rowI = 1;
     for(let row of dataList2.rows)
     {
-        innerHTML += '<tr class="datatable datatable__row"> ';
-        let i=0;
-        for(let data of row)
+        if(row.length > 0)
         {
-            let specialClass = '', specialAttr = '';
-            if(dataList2.col[i].specialClass != null)
+            let pageNumber =  Math.ceil(rowI/ quantityOnPage);
+            console.log(idPage +"===" +pageNumber);
+            if(idPage === pageNumber)
             {
-                let classes = dataList2.col[i].specialClass.split(" ");
-                classes.forEach((item) => {
-                    if(typeof dataList2.specialAttr[item] !== "undefined")
-                        specialAttr= `data-tableAttr="${dataList2.specialAttr[item]}"`;
-                });
+                innerHTML += '<tr class="datatable datatable__row"> ';
+                let i = 0;
+                for(let data of row)
+                {
+                    let specialClass = '', specialAttr = '';
+                    if(dataList2.col[i].specialClass != null)
+                    {
+                        let classes = dataList2.col[i].specialClass.split(" ");
+                        classes.forEach((item) => {
+                            if(typeof dataList2.specialAttr[item] !== "undefined")
+                                specialAttr= `data-tableAttr="${dataList2.specialAttr[item]}"`;
+                        });
 
-                specialClass = dataList2.col[i].specialClass;
-            }
+                        specialClass = dataList2.col[i].specialClass;
+                    }
 
-            switch (dataList2.col[i].type) {
-                case "status":
-                    switch (data) {
-                        case 0:
-                            specialClass += " red";
+                    switch (dataList2.col[i].type) {
+                        case "status":
+                            switch (data) {
+                                case 0:
+                                    specialClass += " red";
+                                    break;
+                                case 1:
+                                    specialClass += " orange";
+                                    break;
+                                case 2:
+                                    specialClass += " green";
+                                    break;
+                                default:
+                                    specialClass += " red";
+                            }
+                            innerHTML += `<td class="${specialClass}" ${specialAttr}>${data}</td>`;
                             break;
-                        case 1:
-                            specialClass += " orange";
-                            break;
-                        case 2:
-                            specialClass += " green";
+                        case "button":
+                            innerHTML += `<td class="${specialClass}" ${specialAttr}><a href="${data.href}">${data.label}</a> </td>`;
                             break;
                         default:
-                            specialClass += " red";
+                            innerHTML += `<td class="${specialClass}" ${specialAttr}>${data}</td>`;
                     }
-                    innerHTML += `<td class="${specialClass}" ${specialAttr}>${data}</td>`;
-                    break;
-                case "button":
-                    innerHTML += `<td class="${specialClass}" ${specialAttr}><a href="${data.href}">${data.label}</a> </td>`;
-                    break;
-                default:
-                    innerHTML += `<td class="${specialClass}" ${specialAttr}>${data}</td>`;
+
+
+                    i++
+                }
+                innerHTML += '</tr>';
+
             }
-
-
-            i++
+            rowI++;
         }
-        innerHTML += '</tr>';
     }
     tbody.innerHTML = innerHTML;
 }
@@ -150,6 +171,47 @@ function loadTableBody() {
     tableHand.appendChild(tbody);
 
     setBodyRow();
+}
+
+
+function filterAll(e) {
+
+    let searchText = e.target.value.toUpperCase();
+    let i = 0;
+    dataListCurrent = JSON.parse(JSON.stringify(dataList));
+
+    for(let row of dataListCurrent.rows)
+    {
+        let sum = false;
+        for(let column of row)
+        {
+            if (column.toString().toUpperCase().indexOf(searchText) > -1){
+                sum = true;
+            }
+        }
+        if(!sum){
+            dataListCurrent.rows[i] = [];
+        }
+
+        i++;
+    }
+    setBodyRow(dataListCurrent);
+
+}
+
+function initPagination(elementHandler, quantityOnPageAttr) {
+    if(typeof quantityOnPageAttr !== 'undefined')
+    {
+        quantityOnPage = quantityOnPageAttr;
+    }
+
+
+
+}
+
+function initSearchDataTable(elementHandler) {
+
+    elementHandler.addEventListener("input", filterAll);
 }
 
 function initDataTables(elementHandler, tableObject) {
@@ -196,32 +258,8 @@ function initDataTables(elementHandler, tableObject) {
 
 }
 
-function filterAll(e) {
+function initQuantityInput(inputHandler) {
 
-    let searchText = e.target.value.toUpperCase();
-    let i = 0;
-    dataListCurrent = JSON.parse(JSON.stringify(dataList));
 
-    for(let row of dataListCurrent.rows)
-    {
-        let sum = false;
-        for(let column of row)
-        {
-            if (column.toString().toUpperCase().indexOf(searchText) > -1){
-                sum = true;
-            }
-        }
-        if(!sum){
-            dataListCurrent.rows[i] = [];
-        }
 
-        i++;
-    }
-    setBodyRow(dataListCurrent);
-
-}
-
-function initSearchDataTable(elementHandler) {
-
-    elementHandler.addEventListener("input", filterAll);
 }

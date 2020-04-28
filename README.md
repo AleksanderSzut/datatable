@@ -1,3 +1,6 @@
+---
+__Reklama :)__
+- __[Bonostrefa.pl](https://bonostrefa.pl)__ - 
 # datatable 8-)
 Skrypt do pracy: bonostrefa.pl 
 ## Jak użyć?
@@ -87,3 +90,4 @@ initSearchDataTable(document.getElementById("Wyszukiwarka"));
 - [ ] Dodać paginację 
 - [ ] Ulepszyć dokumentację 
 #
+
