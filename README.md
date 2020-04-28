@@ -82,9 +82,10 @@ let mojeDane = {
 ```js
 initSearchDataTable(document.getElementById("Wyszukiwarka"));
 ``` 
-#Przykład
+# Przykład
    [live demo](https://github.com/AleksanderSzut/datatable.github.io)
-#todo
+   
+# todo
 - [x] Dodać wyświetlanie tabeli
 - [x] Dodać wyszkiwarkę
 - [ ] Dodać paginację 
